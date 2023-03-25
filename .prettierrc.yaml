@@ -1,0 +1,13 @@
+useTabs: false
+singleQuote: true
+trailingComma: all
+printWidth: 100
+overrides:
+  - files:
+      - "*.yaml"
+    options:
+      singleQuote: false
+  - files:
+      - "*.md"
+    options:
+      proseWrap: never

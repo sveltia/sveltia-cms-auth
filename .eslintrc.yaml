@@ -1,0 +1,71 @@
+root: true
+parser: "@babel/eslint-parser"
+parserOptions:
+  requireConfigFile: false
+  sourceType: module
+  ecmaVersion: 2020
+extends:
+  - eslint:recommended
+  - eslint-config-airbnb-base
+  - prettier
+ignorePatterns:
+  - "*.cjs"
+env:
+  browser: true
+  es2017: true
+  node: true
+rules:
+  class-methods-use-this: off
+  max-len:
+    - error
+    - code: 100
+      tabWidth: 2
+      ignoreUrls: true
+      ignoreStrings: true
+  no-param-reassign: off
+  # https://svelte.dev/docs#component-format-script
+  no-undef-init: off
+  no-underscore-dangle: off
+  # https://github.com/airbnb/javascript/issues/1660#issuecomment-353018874 + small tweaks
+  padding-line-between-statements:
+    - error
+    - blankLine: always
+      prev: "*"
+      next:
+        - block
+        - block-like
+        - cjs-export
+        - class
+        - const
+        - export
+        - import
+        - let
+        - var
+    - blankLine: always
+      prev:
+        - block
+        - block-like
+        - cjs-export
+        - class
+        - const
+        - export
+        - import
+        - let
+        - var
+      next: "*"
+    - blankLine: never
+      prev:
+        - singleline-const
+        - singleline-let
+        - singleline-var
+      next:
+        - singleline-const
+        - singleline-let
+        - singleline-var
+    - blankLine: any
+      prev:
+        - export
+        - import
+      next:
+        - export
+        - import

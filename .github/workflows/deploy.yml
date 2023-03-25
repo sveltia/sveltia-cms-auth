@@ -1,0 +1,21 @@
+# Allow deploying the project to Cloudflare Workers
+# https://developers.cloudflare.com/workers/platform/deploy-button/
+
+name: Build
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish
+        uses: cloudflare/wrangler-action@1.3.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}

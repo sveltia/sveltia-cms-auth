@@ -1,0 +1,20 @@
+{
+  "name": "sveltia-cms-auth",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@babel/eslint-parser": "^7.21.3",
+    "eslint": "^8.36.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.7",
+    "wrangler": "2.13.0"
+  },
+  "scripts": {
+    "start": "wrangler dev",
+    "deploy": "wrangler publish"
+  }
+}
