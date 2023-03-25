@@ -14,6 +14,8 @@ Click the button below to start deploying.
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/sveltia/sveltia-cms-auth)
 
+Alternatively, you can clone the project and run [`wrangler publish`](https://developers.cloudflare.com/workers/wrangler/commands/#publish) locally.
+
 Once deployed, the worker URL (`https://<WORKER>.<SUBDOMAIN>.workers.dev`) will be provided. Copy it for Step 2. It will also be used in Step 4.
 
 ### Step 2. Register the worker as a GitHub OAuth app
