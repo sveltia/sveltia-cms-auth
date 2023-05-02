@@ -8,7 +8,7 @@ export default {
       const domain = searchParams.get('site_id');
 
       // Check if the domain is whitelisted
-      if (ALLOWED_DOMAINS && !ALLOWED_DOMAINS.split(/,\s*/).includes(domain)) {
+      if (ALLOWED_DOMAINS && !ALLOWED_DOMAINS.split(/,\s*/).some(rx => domain.match(rx))) {
         return new Response('');
       }
 
