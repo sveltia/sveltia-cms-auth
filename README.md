@@ -35,7 +35,7 @@ Go back to the `sveltia-cms-auth` service page on Cloudflare, select **Settings*
 
 - `GITHUB_CLIENT_ID`: Client ID from Step 2
 - `GITHUB_CLIENT_SECRET`: Client Secret from Step 2; click the **Encrypt** button to hide it
-- `ALLOWED_DOMAINS`: your site’s domain, e.g. `www.example.com` (multiple domains can be specified comma-separated)
+- `ALLOWED_DOMAINS`: Your site’s domain, e.g. `www.example.com`. Multiple domains can be specified comma-separated, and regular expressions are also supported, e.g. `[a-z]+.example.com, example.org`
 
 Save and deploy.
 

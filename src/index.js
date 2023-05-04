@@ -6,14 +6,9 @@ export default {
     if (pathname === '/auth') {
       const provider = searchParams.get('provider');
       const domain = searchParams.get('site_id');
-      /** @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping */
-      const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
       // Check if the domain is whitelisted
-      if (
-        ALLOWED_DOMAINS &&
-        !ALLOWED_DOMAINS.split(/,\s*/).some((rx) => domain.match(escapeRegExp(rx)))
-      ) {
+      if (ALLOWED_DOMAINS && !ALLOWED_DOMAINS.split(/,\s*/).some((rx) => domain.match(rx))) {
         return new Response('');
       }
 
