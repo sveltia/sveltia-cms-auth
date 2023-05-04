@@ -2,13 +2,21 @@ export default {
   async fetch(request, env) {
     const { pathname, searchParams } = new URL(request.url);
     const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, ALLOWED_DOMAINS } = env;
+    /** @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping */
+    const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     if (pathname === '/auth') {
       const provider = searchParams.get('provider');
       const domain = searchParams.get('site_id');
 
       // Check if the domain is whitelisted
-      if (ALLOWED_DOMAINS && !ALLOWED_DOMAINS.split(/,\s*/).some((rx) => domain.match(rx))) {
+      if (
+        ALLOWED_DOMAINS &&
+        !ALLOWED_DOMAINS.split(/,/).some((str) =>
+          // Escape the input, then replace a wildcard for regex
+          domain.match(new RegExp(`^${escapeRegExp(str.trim()).replace('\\*', '.+')}$`)),
+        )
+      ) {
         return new Response('');
       }
 
