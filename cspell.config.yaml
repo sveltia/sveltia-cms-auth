@@ -16,5 +16,6 @@ ignorePaths:
   - pnpm-lock.yaml
 words:
   - Decap
+  - hostnames
   - singleline
   - Sveltia

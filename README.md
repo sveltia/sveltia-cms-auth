@@ -35,10 +35,10 @@ Go back to the `sveltia-cms-auth` service page on Cloudflare, select **Settings*
 
 - `GITHUB_CLIENT_ID`: Client ID from Step 2
 - `GITHUB_CLIENT_SECRET`: Client Secret from Step 2; click the **Encrypt** button to hide it
-- `ALLOWED_DOMAINS`: Your site’s domain, e.g. `www.example.com`
-  - Multiple domains can be defined as a comma-separated list, e.g. `www.example.com, www.example.org`
+- `ALLOWED_DOMAINS`: Your site’s hostname, e.g. `www.example.com`
+  - Multiple hostnames can be defined as a comma-separated list, e.g. `www.example.com, www.example.org`
   - A wildcard (`*`) can be used to match any subdomain, e.g. `*.example.com` that will match `www.example.com`, `blog.example.com`, `docs.api.example.com`, etc. (but not `example.com`)
-  - To match a domain and all the subdomains, use `example.com, *.example.com`
+  - To match a `www`-less naked domain and all the subdomains, use `example.com, *.example.com`
 
 Save and deploy.
 
