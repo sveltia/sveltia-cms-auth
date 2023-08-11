@@ -69,12 +69,13 @@ export default {
         `
           <!doctype html><html><body><script>
             (() => {
-              window.addEventListener('message', ({ origin }) => {
+              window.addEventListener('message', ({ data, origin }) => {
+                if (data !== 'authorizing:${provider}') return;
                 window.opener.postMessage(
                   'authorization:${provider}:${state}:${JSON.stringify(content)}',
                   origin
                 );
-              }, { once: true });
+              });
               window.opener.postMessage('authorizing:${provider}', '*');
             })();
           </script></body></html>
