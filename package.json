@@ -5,12 +5,12 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "cspell": "^7.3.8",
+    "cspell": "^8.0.0",
     "eslint": "^8.53.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.0",
     "wrangler": "3.15.0"
   },
   "scripts": {
