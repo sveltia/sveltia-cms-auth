@@ -1,5 +1,5 @@
 # Allow deploying the project to Cloudflare Workers
-# https://developers.cloudflare.com/workers/platform/deploy-button/
+# https://developers.cloudflare.com/workers/tutorials/deploy-button/
 
 name: Build
 on:
@@ -8,13 +8,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - name: Checkout the branch
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          version: 8.12.0
-      - name: Publish
+          version: latest
+      - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
