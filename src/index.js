@@ -17,7 +17,7 @@ const handleAuth = async (request, env) => {
   const { searchParams } = new URL(url);
   const provider = searchParams.get('provider');
   const domain = searchParams.get('site_id');
-  const { ALLOWED_DOMAINS, GITHUB_CLIENT_ID } = env;
+  const { ALLOWED_DOMAINS, GITHUB_CLIENT_ID, GITHUB_HOSTNAME = 'github.com' } = env;
 
   // Check if the domain is whitelisted
   if (
@@ -47,7 +47,7 @@ const handleAuth = async (request, env) => {
       status: 302,
       headers: {
         'Set-Cookie': cookie,
-        Location: `https://github.com/login/oauth/authorize?${params.toString()}`,
+        Location: `https://${GITHUB_HOSTNAME}/login/oauth/authorize?${params.toString()}`,
       },
     });
   }
@@ -72,7 +72,7 @@ const handleCallback = async (request, env) => {
     return new Response('', { status: 403 });
   }
 
-  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = env;
+  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, GITHUB_HOSTNAME = 'github.com' } = env;
   let provider;
   let token;
   let error;
@@ -82,7 +82,7 @@ const handleCallback = async (request, env) => {
     provider = 'github';
 
     try {
-      const response = await fetch('https://github.com/login/oauth/access_token', {
+      const response = await fetch(`https://${GITHUB_HOSTNAME}/login/oauth/access_token`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
