@@ -30,11 +30,26 @@ const handleAuth = async (request, env) => {
     return new Response('', { status: 403 });
   }
 
+  // Generate a random string for CSRF protection
+  const csrfToken = globalThis.crypto.randomUUID().replaceAll('-', '');
+  // Cookie expires in 10 minutes; Use `SameSite=Lax` to make sure the cookie is sent after redirect
+  const cookie = `csrf-token=${csrfToken}; HttpOnly; Max-Age=600; SameSite=Lax; Secure`;
+
   // GitHub
   if (provider === 'github' && GITHUB_CLIENT_ID) {
-    return Response.redirect(
-      `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=repo,user`,
-    );
+    const params = new URLSearchParams({
+      client_id: GITHUB_CLIENT_ID,
+      scope: 'repo,user',
+      state: csrfToken,
+    });
+
+    return new Response('', {
+      status: 302,
+      headers: {
+        'Set-Cookie': cookie,
+        Location: `https://github.com/login/oauth/authorize?${params.toString()}`,
+      },
+    });
   }
 
   return new Response('', { status: 403 });
@@ -47,11 +62,13 @@ const handleAuth = async (request, env) => {
  * @returns {Promise<Response>} HTTP response.
  */
 const handleCallback = async (request, env) => {
-  const { url } = request;
+  const { url, headers } = request;
   const { searchParams } = new URL(url);
   const code = searchParams.get('code');
+  const csrfToken = searchParams.get('state');
+  const csrfTokenCookie = headers.get('Cookie');
 
-  if (!code) {
+  if (!code || !csrfToken || !csrfTokenCookie || csrfTokenCookie !== `csrf-token=${csrfToken}`) {
     return new Response('', { status: 403 });
   }
 
