@@ -1,10 +1,49 @@
 /**
+ * List of supported OAuth providers.
+ */
+const supportedProviders = ['github', 'gitlab'];
+/**
  * Escape the given string for safe use in a regular expression.
  * @param {string} str - Original string.
  * @returns {string} Escaped string.
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
  */
 const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Output HTML response that communicates with the window opener.
+ * @param {object} args - Options.
+ * @param {string} [args.provider] - Backend name, e,g. `github`.
+ * @param {string} [args.token] - OAuth token.
+ * @param {string} [args.error] - Error message when an OAuth token is not available.
+ * @returns {Response} Response with HTML.
+ */
+const outputHTML = ({ provider = 'unknown', token, error }) => {
+  const state = error ? 'error' : 'success';
+  const content = error ? { provider, error } : { provider, token };
+
+  return new Response(
+    `
+      <!doctype html><html><body><script>
+        (() => {
+          window.addEventListener('message', ({ data, origin }) => {
+            if (data !== 'authorizing:${provider}') return;
+            window.opener?.postMessage(
+              'authorization:${provider}:${state}:${JSON.stringify(content)}',
+              origin
+            );
+          });
+          window.opener?.postMessage('authorizing:${provider}', '*');
+        })();
+      </script></body></html>
+    `,
+    {
+      headers: {
+        'Content-Type': 'text/html;charset=UTF-8',
+      },
+    },
+  );
+};
 
 /**
  * Handle the `auth` method, which is the first request in the authorization flow.
@@ -15,27 +54,31 @@ const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const handleAuth = async (request, env) => {
   const { url } = request;
   const { origin, searchParams } = new URL(url);
-  const provider = searchParams.get('provider');
-  const domain = searchParams.get('site_id');
+  const { provider, domain } = Object.fromEntries(searchParams);
+
+  if (!provider || !supportedProviders.includes(provider)) {
+    return outputHTML({ error: 'Your Git backend is not supported.' });
+  }
 
   const {
     ALLOWED_DOMAINS,
     GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET,
     GITHUB_HOSTNAME = 'github.com',
     GITLAB_CLIENT_ID,
+    GITLAB_CLIENT_SECRET,
     GITLAB_HOSTNAME = 'gitlab.com',
   } = env;
 
   // Check if the domain is whitelisted
   if (
-    domain &&
     ALLOWED_DOMAINS &&
     !ALLOWED_DOMAINS.split(/,/).some((str) =>
       // Escape the input, then replace a wildcard for regex
-      domain.match(new RegExp(`^${escapeRegExp(str.trim()).replace('\\*', '.+')}$`)),
+      (domain ?? '').match(new RegExp(`^${escapeRegExp(str.trim()).replace('\\*', '.+')}$`)),
     )
   ) {
-    return new Response('', { status: 403 });
+    return outputHTML({ provider, error: 'Your domain is not supported.' });
   }
 
   // Generate a random string for CSRF protection
@@ -43,7 +86,11 @@ const handleAuth = async (request, env) => {
   let authURL = '';
 
   // GitHub
-  if (provider === 'github' && GITHUB_CLIENT_ID) {
+  if (provider === 'github') {
+    if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
+      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+    }
+
     const params = new URLSearchParams({
       client_id: GITHUB_CLIENT_ID,
       scope: 'repo,user',
@@ -54,7 +101,11 @@ const handleAuth = async (request, env) => {
   }
 
   // GitLab
-  if (provider === 'gitlab' && GITLAB_CLIENT_ID) {
+  if (provider === 'gitlab') {
+    if (!GITLAB_CLIENT_ID || !GITLAB_CLIENT_SECRET) {
+      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+    }
+
     const params = new URLSearchParams({
       client_id: GITLAB_CLIENT_ID,
       redirect_uri: `${origin}/callback`,
@@ -66,19 +117,16 @@ const handleAuth = async (request, env) => {
     authURL = `https://${GITLAB_HOSTNAME}/oauth/authorize?${params.toString()}`;
   }
 
-  if (authURL) {
-    return new Response('', {
-      status: 302,
-      headers: {
-        Location: authURL,
-        // Cookie expires in 10 minutes; Use `SameSite=Lax` to make sure the cookie is sent by the
-        // browser after redirect
-        'Set-Cookie': `csrf-token=${csrfToken}; HttpOnly; Max-Age=600; SameSite=Lax; Secure`,
-      },
-    });
-  }
-
-  return new Response('', { status: 403 });
+  // Redirect to the authorization server
+  return new Response('', {
+    status: 302,
+    headers: {
+      Location: authURL,
+      // Cookie expires in 10 minutes; Use `SameSite=Lax` to make sure the cookie is sent by the
+      // browser after redirect
+      'Set-Cookie': `csrf-token=${provider}_${csrfToken}; HttpOnly; Max-Age=600; SameSite=Lax; Secure`,
+    },
+  });
 };
 
 /**
@@ -90,12 +138,21 @@ const handleAuth = async (request, env) => {
 const handleCallback = async (request, env) => {
   const { url, headers } = request;
   const { origin, searchParams } = new URL(url);
-  const code = searchParams.get('code');
-  const csrfToken = searchParams.get('state');
-  const csrfTokenCookie = headers.get('Cookie');
+  const { code, state } = Object.fromEntries(searchParams);
 
-  if (!code || !csrfToken || !csrfTokenCookie || csrfTokenCookie !== `csrf-token=${csrfToken}`) {
-    return new Response('', { status: 403 });
+  const [, provider, csrfToken] =
+    headers.get('Cookie')?.match(/\bcsrf-token=([a-z-]+?)_([0-9a-f]{32})\b/) ?? [];
+
+  if (!provider || !supportedProviders.includes(provider)) {
+    return outputHTML({ error: 'Your Git backend is not supported.' });
+  }
+
+  if (!code || !state) {
+    return outputHTML({ provider, error: 'Authorization code is not provided.' });
+  }
+
+  if (!csrfToken || state !== csrfToken) {
+    return outputHTML({ provider, error: 'The possibility of CSRF is detected.' });
   }
 
   const {
@@ -107,13 +164,15 @@ const handleCallback = async (request, env) => {
     GITLAB_HOSTNAME = 'gitlab.com',
   } = env;
 
-  let provider = '';
   let tokenURL = '';
   let requestBody = {};
 
   // GitHub
-  if (GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET) {
-    provider = 'github';
+  if (provider === 'github') {
+    if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
+      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+    }
+
     tokenURL = `https://${GITHUB_HOSTNAME}/login/oauth/access_token`;
     requestBody = {
       code,
@@ -122,9 +181,11 @@ const handleCallback = async (request, env) => {
     };
   }
 
-  // GitLab
-  if (GITLAB_CLIENT_ID && GITLAB_CLIENT_SECRET) {
-    provider = 'gitlab';
+  if (provider === 'gitlab') {
+    if (!GITLAB_CLIENT_ID || !GITLAB_CLIENT_SECRET) {
+      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+    }
+
     tokenURL = `https://${GITLAB_HOSTNAME}/oauth/token`;
     requestBody = {
       code,
@@ -135,15 +196,12 @@ const handleCallback = async (request, env) => {
     };
   }
 
-  if (!provider) {
-    return new Response('', { status: 403 });
-  }
-
+  let response;
   let token = '';
   let error = '';
 
   try {
-    const response = await fetch(tokenURL, {
+    response = await fetch(tokenURL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -151,46 +209,17 @@ const handleCallback = async (request, env) => {
       },
       body: JSON.stringify(requestBody),
     });
+  } catch {
+    return outputHTML({ provider, error: 'Server responded with an error.' });
+  }
 
-    const { ok, status } = response;
-
-    if (!ok) {
-      throw new Error(`Server responded with status ${status}`);
-    }
-
+  try {
     ({ access_token: token, error } = await response.json());
-  } catch (/** @type {any} */ { message }) {
-    error = message;
+  } catch {
+    return outputHTML({ provider, error: 'Server responded with malformed JSON.' });
   }
 
-  if (!(token || error)) {
-    return new Response('', { status: 403 });
-  }
-
-  const state = error ? 'error' : 'success';
-  const content = error ? { error } : { provider, token };
-
-  return new Response(
-    `
-      <!doctype html><html><body><script>
-        (() => {
-          window.addEventListener('message', ({ data, origin }) => {
-            if (data !== 'authorizing:${provider}') return;
-            window.opener.postMessage(
-              'authorization:${provider}:${state}:${JSON.stringify(content)}',
-              origin
-            );
-          });
-          window.opener.postMessage('authorizing:${provider}', '*');
-        })();
-      </script></body></html>
-    `,
-    {
-      headers: {
-        'Content-Type': 'text/html;charset=UTF-8',
-      },
-    },
-  );
+  return outputHTML({ provider, token, error });
 };
 
 export default {
