@@ -6,6 +6,9 @@ parserOptions:
 extends:
   - airbnb-base
   - prettier
+  - plugin:jsdoc/recommended
+plugins:
+  - jsdoc
 ignorePatterns:
   - "*.cjs"
 env:
@@ -14,6 +17,39 @@ env:
   node: true
 rules:
   class-methods-use-this: off
+  import/extensions: off
+  import/no-extraneous-dependencies: off
+  import/no-mutable-exports: off
+  import/no-unresolved: off
+  import/prefer-default-export: off
+  jsdoc/no-undefined-types: off
+  jsdoc/require-jsdoc:
+    - warn
+    - require:
+        ArrowFunctionExpression: true
+        ClassDeclaration: true
+        ClassExpression: true
+        FunctionDeclaration: true
+        FunctionExpression: true
+        MethodDefinition: true
+  # Other JSDoc rules not in the recommended list
+  jsdoc/check-indentation: 1
+  jsdoc/check-line-alignment: 1
+  jsdoc/check-syntax: 1
+  jsdoc/match-description: 1
+  jsdoc/no-bad-blocks: 1
+  jsdoc/no-blank-block-descriptions: 1
+  jsdoc/no-defaults: 1
+  jsdoc/require-asterisk-prefix: 1
+  jsdoc/require-description: 1
+  jsdoc/require-description-complete-sentence: 1
+  jsdoc/require-hyphen-before-param-description:
+    - error
+    - always
+    - tags:
+        property: always
+  jsdoc/require-throws: 1
+  jsdoc/sort-tags: 1
   max-len:
     - error
     - code: 100
@@ -21,8 +57,6 @@ rules:
       ignoreUrls: true
       ignoreStrings: true
   no-param-reassign: off
-  # https://svelte.dev/docs#component-format-script
-  no-undef-init: off
   no-underscore-dangle: off
   # https://github.com/airbnb/javascript/issues/1660#issuecomment-353018874 + small tweaks
   padding-line-between-statements:

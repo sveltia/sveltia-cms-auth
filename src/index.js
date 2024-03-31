@@ -1,6 +1,6 @@
 /**
  * Escape the given string for safe use in a regular expression.
- * @param {string} str Original string.
+ * @param {string} str - Original string.
  * @returns {string} Escaped string.
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
  */
@@ -8,8 +8,8 @@ const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /**
  * Handle the `auth` method, which is the first request in the authorization flow.
- * @param {Request} request HTTP request.
- * @param {{ [key: string]: string }} env Environment variables.
+ * @param {Request} request - HTTP request.
+ * @param {{ [key: string]: string }} env - Environment variables.
  * @returns {Promise<Response>} HTTP response.
  */
 const handleAuth = async (request, env) => {
@@ -28,6 +28,7 @@ const handleAuth = async (request, env) => {
 
   // Check if the domain is whitelisted
   if (
+    domain &&
     ALLOWED_DOMAINS &&
     !ALLOWED_DOMAINS.split(/,/).some((str) =>
       // Escape the input, then replace a wildcard for regex
@@ -39,7 +40,7 @@ const handleAuth = async (request, env) => {
 
   // Generate a random string for CSRF protection
   const csrfToken = globalThis.crypto.randomUUID().replaceAll('-', '');
-  let authURL;
+  let authURL = '';
 
   // GitHub
   if (provider === 'github' && GITHUB_CLIENT_ID) {
@@ -82,8 +83,8 @@ const handleAuth = async (request, env) => {
 
 /**
  * Handle the `callback` method, which is the second request in the authorization flow.
- * @param {Request} request HTTP request.
- * @param {{ [key: string]: string }} env Environment variables.
+ * @param {Request} request - HTTP request.
+ * @param {{ [key: string]: string }} env - Environment variables.
  * @returns {Promise<Response>} HTTP response.
  */
 const handleCallback = async (request, env) => {
@@ -106,9 +107,9 @@ const handleCallback = async (request, env) => {
     GITLAB_HOSTNAME = 'gitlab.com',
   } = env;
 
-  let provider;
-  let tokenURL;
-  let requestBody;
+  let provider = '';
+  let tokenURL = '';
+  let requestBody = {};
 
   // GitHub
   if (GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET) {
@@ -138,8 +139,8 @@ const handleCallback = async (request, env) => {
     return new Response('', { status: 403 });
   }
 
-  let token;
-  let error;
+  let token = '';
+  let error = '';
 
   try {
     const response = await fetch(tokenURL, {
@@ -158,7 +159,7 @@ const handleCallback = async (request, env) => {
     }
 
     ({ access_token: token, error } = await response.json());
-  } catch ({ message }) {
+  } catch (/** @type {any} */ { message }) {
     error = message;
   }
 
@@ -195,8 +196,8 @@ const handleCallback = async (request, env) => {
 export default {
   /**
    * The main request handler.
-   * @param {Request} request HTTP request.
-   * @param {{ [key: string]: string }} env Environment variables.
+   * @param {Request} request - HTTP request.
+   * @param {{ [key: string]: string }} env - Environment variables.
    * @returns {Promise<Response>} HTTP response.
    * @see https://developers.cloudflare.com/workers/runtime-apis/fetch/
    * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps

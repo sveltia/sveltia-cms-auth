@@ -17,5 +17,6 @@ ignorePaths:
 words:
   - Decap
   - hostnames
+  - jsdoc
   - singleline
   - Sveltia
