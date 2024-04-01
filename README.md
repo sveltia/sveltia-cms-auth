@@ -56,7 +56,7 @@ Go back to the `sveltia-cms-auth` service page on Cloudflare, select **Settings*
 
 - `GITLAB_CLIENT_ID`: **Application ID** from Step 2
 - `GITLAB_CLIENT_SECRET`: **Secret** from Step 2; click the **Encrypt** button to hide it
-- `GITLAB_HOSTNAME`: Required only if you’re using a custom domain. Default: `gitlab.com`
+- `GITLAB_HOSTNAME`: Required only if you’re using a self-hosted instance. Default: `gitlab.com`
 
 #### Both GitHub and GitLab
 
