@@ -43,6 +43,8 @@ const outputHTML = ({ provider = 'unknown', token, error, errorCode }) => {
     {
       headers: {
         'Content-Type': 'text/html;charset=UTF-8',
+        // Delete CSRF token
+        'Set-Cookie': `csrf-token=deleted; HttpOnly; Max-Age=0; Path=/; SameSite=Lax; Secure`,
       },
     },
   );
@@ -142,7 +144,9 @@ const handleAuth = async (request, env) => {
       Location: authURL,
       // Cookie expires in 10 minutes; Use `SameSite=Lax` to make sure the cookie is sent by the
       // browser after redirect
-      'Set-Cookie': `csrf-token=${provider}_${csrfToken}; HttpOnly; Max-Age=600; SameSite=Lax; Secure`,
+      'Set-Cookie':
+        `csrf-token=${provider}_${csrfToken}; ` +
+        `HttpOnly; Path=/; Max-Age=600; SameSite=Lax; Secure`,
     },
   });
 };
