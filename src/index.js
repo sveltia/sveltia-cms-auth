@@ -54,7 +54,7 @@ const outputHTML = ({ provider = 'unknown', token, error }) => {
 const handleAuth = async (request, env) => {
   const { url } = request;
   const { origin, searchParams } = new URL(url);
-  const { provider, domain } = Object.fromEntries(searchParams);
+  const { provider, site_id: domain } = Object.fromEntries(searchParams);
 
   if (!provider || !supportedProviders.includes(provider)) {
     return outputHTML({ error: 'Your Git backend is not supported.' });
