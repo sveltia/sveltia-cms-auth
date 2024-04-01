@@ -16,22 +16,25 @@ const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
  * @param {string} [args.provider] - Backend name, e,g. `github`.
  * @param {string} [args.token] - OAuth token.
  * @param {string} [args.error] - Error message when an OAuth token is not available.
+ * @param {string} [args.errorCode] - Error code to be used to localize the error message in
+ * Sveltia CMS.
  * @returns {Response} Response with HTML.
  */
-const outputHTML = ({ provider = 'unknown', token, error }) => {
+const outputHTML = ({ provider = 'unknown', token, error, errorCode }) => {
   const state = error ? 'error' : 'success';
-  const content = error ? { provider, error } : { provider, token };
+  const content = error ? { provider, error, errorCode } : { provider, token };
 
   return new Response(
     `
       <!doctype html><html><body><script>
         (() => {
           window.addEventListener('message', ({ data, origin }) => {
-            if (data !== 'authorizing:${provider}') return;
-            window.opener?.postMessage(
-              'authorization:${provider}:${state}:${JSON.stringify(content)}',
-              origin
-            );
+            if (data === 'authorizing:${provider}') {
+              window.opener?.postMessage(
+                'authorization:${provider}:${state}:${JSON.stringify(content)}',
+                origin
+              );
+            }
           });
           window.opener?.postMessage('authorizing:${provider}', '*');
         })();
@@ -57,7 +60,10 @@ const handleAuth = async (request, env) => {
   const { provider, site_id: domain } = Object.fromEntries(searchParams);
 
   if (!provider || !supportedProviders.includes(provider)) {
-    return outputHTML({ error: 'Your Git backend is not supported.' });
+    return outputHTML({
+      error: 'Your Git backend is not supported by the authenticator.',
+      errorCode: 'UNSUPPORTED_BACKEND',
+    });
   }
 
   const {
@@ -78,7 +84,11 @@ const handleAuth = async (request, env) => {
       (domain ?? '').match(new RegExp(`^${escapeRegExp(str.trim()).replace('\\*', '.+')}$`)),
     )
   ) {
-    return outputHTML({ provider, error: 'Your domain is not supported.' });
+    return outputHTML({
+      provider,
+      error: 'Your domain is not allowed to use the authenticator.',
+      errorCode: 'UNSUPPORTED_DOMAIN',
+    });
   }
 
   // Generate a random string for CSRF protection
@@ -88,7 +98,11 @@ const handleAuth = async (request, env) => {
   // GitHub
   if (provider === 'github') {
     if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
-      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+      return outputHTML({
+        provider,
+        error: 'OAuth app client ID or secret is not configured.',
+        errorCode: 'MISCONFIGURED_CLIENT',
+      });
     }
 
     const params = new URLSearchParams({
@@ -103,7 +117,11 @@ const handleAuth = async (request, env) => {
   // GitLab
   if (provider === 'gitlab') {
     if (!GITLAB_CLIENT_ID || !GITLAB_CLIENT_SECRET) {
-      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+      return outputHTML({
+        provider,
+        error: 'OAuth app client ID or secret is not configured.',
+        errorCode: 'MISCONFIGURED_CLIENT',
+      });
     }
 
     const params = new URLSearchParams({
@@ -144,15 +162,26 @@ const handleCallback = async (request, env) => {
     headers.get('Cookie')?.match(/\bcsrf-token=([a-z-]+?)_([0-9a-f]{32})\b/) ?? [];
 
   if (!provider || !supportedProviders.includes(provider)) {
-    return outputHTML({ error: 'Your Git backend is not supported.' });
+    return outputHTML({
+      error: 'Your Git backend is not supported by the authenticator.',
+      errorCode: 'UNSUPPORTED_BACKEND',
+    });
   }
 
   if (!code || !state) {
-    return outputHTML({ provider, error: 'Authorization code is not provided.' });
+    return outputHTML({
+      provider,
+      error: 'Failed to receive an authorization code. Please try again later.',
+      errorCode: 'AUTH_CODE_REQUEST_FAILED',
+    });
   }
 
   if (!csrfToken || state !== csrfToken) {
-    return outputHTML({ provider, error: 'The possibility of CSRF is detected.' });
+    return outputHTML({
+      provider,
+      error: 'Possible CSRF attack was detected. Make sure your internet connection is secure.',
+      errorCode: 'CSRF_DETECTED',
+    });
   }
 
   const {
@@ -170,7 +199,11 @@ const handleCallback = async (request, env) => {
   // GitHub
   if (provider === 'github') {
     if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
-      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+      return outputHTML({
+        provider,
+        error: 'OAuth app client ID or secret is not configured.',
+        errorCode: 'MISCONFIGURED_CLIENT',
+      });
     }
 
     tokenURL = `https://${GITHUB_HOSTNAME}/login/oauth/access_token`;
@@ -183,7 +216,11 @@ const handleCallback = async (request, env) => {
 
   if (provider === 'gitlab') {
     if (!GITLAB_CLIENT_ID || !GITLAB_CLIENT_SECRET) {
-      return outputHTML({ provider, error: 'Application ID or client secret is not configured.' });
+      return outputHTML({
+        provider,
+        error: 'OAuth app client ID or secret is not configured.',
+        errorCode: 'MISCONFIGURED_CLIENT',
+      });
     }
 
     tokenURL = `https://${GITLAB_HOSTNAME}/oauth/token`;
@@ -210,13 +247,25 @@ const handleCallback = async (request, env) => {
       body: JSON.stringify(requestBody),
     });
   } catch {
-    return outputHTML({ provider, error: 'Server responded with an error.' });
+    //
+  }
+
+  if (!response) {
+    return outputHTML({
+      provider,
+      error: 'Failed to request an access token. Please try again later.',
+      errorCode: 'TOKEN_REQUEST_FAILED',
+    });
   }
 
   try {
     ({ access_token: token, error } = await response.json());
   } catch {
-    return outputHTML({ provider, error: 'Server responded with malformed JSON.' });
+    return outputHTML({
+      provider,
+      error: 'Server responded with malformed data. Please try again later.',
+      errorCode: 'MALFORMED_RESPONSE',
+    });
   }
 
   return outputHTML({ provider, token, error });
