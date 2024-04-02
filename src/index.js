@@ -183,7 +183,7 @@ const handleCallback = async (request, env) => {
   if (!csrfToken || state !== csrfToken) {
     return outputHTML({
       provider,
-      error: 'Possible CSRF attack was detected. Make sure your internet connection is secure.',
+      error: 'Potential CSRF attack detected. Authentication flow blocked.',
       errorCode: 'CSRF_DETECTED',
     });
   }
