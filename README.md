@@ -36,7 +36,7 @@ Once registered, click on the **Generate a new client secret** button. The appâ€
 [Register a new OAuth application](https://gitlab.com/-/user_settings/applications) on GitLab ([details](https://docs.gitlab.com/ee/integration/oauth_provider.html#create-a-user-owned-application)) with the following properties, including your Worker URL from Step 1:
 
 - Name: `Sveltia CMS Authenticator` (or whatever)
-- Redirect URI: `<YOUR_WORKER_URL>/oauth/redirect`
+- Redirect URI: `<YOUR_WORKER_URL>/callback`
 - Confidential: Yes
 - Scopes: `api` only
 
