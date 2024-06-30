@@ -5,15 +5,15 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/node": "^20.14.8",
+    "@types/node": "^20.14.9",
     "cspell": "^8.9.1",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^48.2.15",
+    "eslint-plugin-jsdoc": "^48.5.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.2",
-    "wrangler": "3.61.0"
+    "wrangler": "3.62.0"
   },
   "scripts": {
     "start": "wrangler dev",
