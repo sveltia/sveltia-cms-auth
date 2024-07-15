@@ -18,10 +18,11 @@
   "scripts": {
     "start": "wrangler dev",
     "deploy": "wrangler deploy",
-    "lint": "npm-run-all lint:*",
-    "lint:cspell": "cspell --no-progress",
-    "lint:prettier": "prettier --check .",
-    "lint:eslint": "eslint ."
+    "check": "npm-run-all check:*",
+    "check:audit": "pnpm audit",
+    "check:cspell": "cspell --no-progress",
+    "check:prettier": "prettier --check .",
+    "check:eslint": "eslint ."
   },
   "pnpm": {
     "overrides": {
