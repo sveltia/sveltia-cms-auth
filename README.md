@@ -10,7 +10,7 @@ You can use it if your site is hosted (or has been moved to) somewhere else, suc
 
 ### Step 1. Deploy this project to Cloudflare Workers
 
-Click the button below to start deploying.
+Sign up with Cloudflare, and click the button below to start deploying.
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/sveltia/sveltia-cms-auth)
 
@@ -80,6 +80,12 @@ Open `admin/config.yml` locally or remotely, and add your Worker URL from Step 1
 ```
 
 Commit the change. Once deployed, you can sign into Sveltia CMS remotely with GitHub or GitLab!
+
+## FAQ
+
+### Why do I have to set this thing up in the first place?
+
+Technically, we could host Sveltia CMS Authenticator on our own server and let anyone use it, just like Netlify does. The cost probably wouldn’t matter because it’s just a small, short-lived script. However, running such a **service** certainly comes with legal, privacy and security liabilities that we cannot afford. Remember that Sveltia CMS is nothing more than [@kyoshino](https://github.com/kyoshino)’s personal project. That’s why the authenticator is not offered as SaaS and you have to install it yourself.
 
 ## Acknowledgements
 
