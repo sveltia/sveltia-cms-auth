@@ -19,8 +19,13 @@
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^50.3.0",
+    "eslint-plugin-jsdoc": "^50.3.1",
     "prettier": "^3.3.3",
-    "wrangler": "3.78.12"
+    "wrangler": "3.80.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "cookie@<0.7.0": ">=0.7.0"
+    }
   }
 }
