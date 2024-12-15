@@ -14,14 +14,14 @@
     "check:eslint": "eslint ."
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.2",
     "cspell": "^8.16.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^50.6.0",
+    "eslint-plugin-jsdoc": "^50.6.1",
     "prettier": "^3.4.2",
-    "wrangler": "3.93.0"
+    "wrangler": "3.95.0"
   },
   "pnpm": {
     "overrides": {
