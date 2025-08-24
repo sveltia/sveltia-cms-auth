@@ -19,9 +19,9 @@
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^54.1.0",
+    "eslint-plugin-jsdoc": "^54.1.1",
     "prettier": "^3.6.2",
-    "wrangler": "4.30.0"
+    "wrangler": "4.32.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
