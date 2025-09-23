@@ -4,3 +4,6 @@ overrides:
 onlyBuiltDependencies:
   - esbuild
   - workerd
+# Work around https://github.com/sveltia/sveltia-cms-auth/issues/17
+packages:
+  - .
