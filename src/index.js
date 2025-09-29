@@ -57,8 +57,15 @@ const outputHTML = ({ provider = 'unknown', token, error, errorCode }) => {
  * @returns {Promise<Response>} HTTP response.
  */
 const handleAuth = async (request, env) => {
-  const { url } = request;
-  const { origin, searchParams } = new URL(url);
+  const { url, headers } = request;
+  const parsed = new URL(url);
+
+  const forwardedProto = headers.get("x-forwarded-proto");
+  if (forwardedProto !== null) {
+    parsed.protocol = forwardedProto;
+  }
+
+  const { origin, searchParams } = parsed;
   const { provider, site_id: domain } = Object.fromEntries(searchParams);
 
   if (!provider || !supportedProviders.includes(provider)) {
@@ -159,7 +166,15 @@ const handleAuth = async (request, env) => {
  */
 const handleCallback = async (request, env) => {
   const { url, headers } = request;
-  const { origin, searchParams } = new URL(url);
+
+  const parsed = new URL(url);
+
+  const forwardedProto = headers.get("x-forwarded-proto");
+  if (forwardedProto !== null) {
+    parsed.protocol = forwardedProto;
+  }
+
+  const { origin, searchParams } = parsed;
   const { code, state } = Object.fromEntries(searchParams);
 
   const [, provider, csrfToken] =
