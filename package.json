@@ -14,13 +14,13 @@
     "check:eslint": "eslint ."
   },
   "devDependencies": {
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.9.2",
     "cspell": "^9.2.2",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^56.1.2",
     "prettier": "^3.6.2",
-    "wrangler": "4.45.0"
+    "wrangler": "4.45.3"
   }
 }
