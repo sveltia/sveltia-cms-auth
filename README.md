@@ -6,6 +6,14 @@ You don’t have to use it if you previously had Netlify/Decap CMS and your site
 
 You can use it if your site is hosted (or has been moved to) somewhere else, such as [Cloudflare Pages](https://pages.cloudflare.com/) or [GitHub Pages](https://pages.github.com/), and you don’t have any other 3rd party client yet.
 
+<!-- prettier-ignore-start -->
+> [!TIP]
+> Sveltia CMS users can now sign in directly with a Git-based backend using a personal access token (PAT) instead of going through the regular OAuth flow. If you’re a developer and the sole user of your CMS instance, the PAT method is much simpler than setting up this authenticator. However, if you have multiple users or non-technical users, you may still want to use the OAuth client for a better user experience.
+
+> [!NOTE]
+> GitHub plans to support [client-side PKCE for SPAs](https://github.com/github/roadmap/issues/1153) by the end of 2025. Once that’s available, this authenticator will be deprecated for GitHub users since Sveltia CMS will be able to authenticate directly with GitHub without a backend.
+<!-- prettier-ignore-end -->
+
 ## How to use it
 
 ### Step 1. Deploy this project to Cloudflare Workers

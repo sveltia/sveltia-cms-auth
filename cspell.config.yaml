@@ -22,6 +22,7 @@ words:
   - hostnames
   - jsdoc
   - kyoshino
+  - PKCE
   - singleline
   - Sveltia
   - workerd
