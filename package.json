@@ -15,12 +15,12 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "cspell": "^9.3.2",
+    "cspell": "^9.4.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^56.1.2",
-    "prettier": "^3.7.3",
-    "wrangler": "4.51.0"
+    "prettier": "^3.7.4",
+    "wrangler": "4.53.0"
   }
 }
