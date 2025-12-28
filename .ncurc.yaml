@@ -4,5 +4,3 @@ reject:
   # https://github.com/airbnb/javascript/issues/2961
   - eslint
   - eslint-plugin-svelte
-  # https://github.com/gajus/eslint-plugin-jsdoc/issues/1478
-  - eslint-plugin-jsdoc
