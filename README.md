@@ -12,7 +12,8 @@ You can use it if your site is hosted (or has been moved to) somewhere else, suc
 
 > [!NOTE]
 > GitHub plans to support [client-side PKCE for SPAs](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated for GitHub users since Sveltia CMS will be able to authenticate directly with GitHub without a backend.
-> GitLab has supported client-side PKCE for a while already. See our [documentation](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) for how to set it up without this authenticator.
+>
+> GitLab has supported client-side PKCE for a while already — see our [documentation](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) for how to set it up without this authenticator.
 <!-- prettier-ignore-end -->
 
 ## How to use it
