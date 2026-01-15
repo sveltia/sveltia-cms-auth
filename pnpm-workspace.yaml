@@ -1,7 +1,12 @@
 minimumReleaseAge: 1440
+
 onlyBuiltDependencies:
   - esbuild
   - workerd
+
+overrides:
+  undici@>=7.0.0 <7.18.2: ">=7.18.2"
+
 # Work around https://github.com/sveltia/sveltia-cms-auth/issues/17
 packages:
   - .

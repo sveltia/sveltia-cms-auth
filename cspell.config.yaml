@@ -25,4 +25,5 @@ words:
   - PKCE
   - singleline
   - Sveltia
+  - undici
   - workerd
