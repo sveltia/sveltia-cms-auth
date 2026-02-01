@@ -7,13 +7,16 @@ You don’t have to use it if you previously had Netlify/Decap CMS and your site
 You can use it if your site is hosted (or has been moved to) somewhere else, such as [Cloudflare Pages](https://pages.cloudflare.com/) or [GitHub Pages](https://pages.github.com/), and you don’t have any other 3rd party client yet.
 
 <!-- prettier-ignore-start -->
+
 > [!TIP]
-> Sveltia CMS users can now sign in directly with a Git-based backend using a personal access token (PAT) instead of going through the regular OAuth flow. If you’re a developer and the sole user of your CMS instance, the PAT method is much simpler than setting up this authenticator. However, if you have multiple users or non-technical users, you may still want to use the OAuth client for a better user experience.
+> GitHub users can now sign [using a personal access token](https://sveltiacms.app/en/docs/backends/github#access-token) (PAT) instead of going through the regular OAuth flow. If you’re a developer and the sole user of your CMS instance, the PAT method is much simpler than setting up this authenticator. However, if you have multiple users or non-technical users, you may still want to use the OAuth client for a better user experience.
+
+> [!TIP]
+> GitLab users don’t have to use this authenticator. Use the [PAT method](https://sveltiacms.app/en/docs/backends/gitlab#access-token) or [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead. GitLab support is included here for completeness, but it’s not necessary in most cases.
 
 > [!NOTE]
-> GitHub plans to support [client-side PKCE for SPAs](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated for GitHub users since Sveltia CMS will be able to authenticate directly with GitHub without a backend.
->
-> GitLab has supported client-side PKCE for a while already — see our [documentation](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) for how to set it up without this authenticator.
+> GitHub plans to support [client-side PKCE for SPAs](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated since Sveltia CMS will be able to authenticate directly with GitHub without a backend, just like it already does with GitLab.
+
 <!-- prettier-ignore-end -->
 
 ## How to use it
