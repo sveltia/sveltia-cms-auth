@@ -10,3 +10,8 @@ overrides:
 # Work around https://github.com/sveltia/sveltia-cms-auth/issues/17
 packages:
   - .
+
+auditConfig:
+  ignoreCves:
+    # ESLint https://github.com/advisories/GHSA-p5wg-g6qr-c7cg
+    - CVE-2025-50537
