@@ -12,6 +12,6 @@ packages:
   - .
 
 auditConfig:
-  ignoreCves:
-    # ESLint https://github.com/advisories/GHSA-p5wg-g6qr-c7cg
-    - CVE-2025-50537
+  ignoreGhsas:
+    # https://github.com/advisories/GHSA-3ppc-4f35-3m26
+    - GHSA-3ppc-4f35-3m26

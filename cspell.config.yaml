@@ -19,6 +19,8 @@ words:
   - CVEs
   - Decap
   - esbuild
+  - GHSA
+  - Ghsas
   - hostnames
   - jsdoc
   - kyoshino
