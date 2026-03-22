@@ -21,6 +21,6 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^62.8.0",
     "prettier": "^3.8.1",
-    "wrangler": "4.73.0"
+    "wrangler": "4.76.0"
   }
 }
