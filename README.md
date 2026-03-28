@@ -1,6 +1,6 @@
 # Sveltia CMS Authenticator
 
-This simple [Cloudflare Workers](https://workers.cloudflare.com/) script allows [Sveltia CMS](https://github.com/sveltia/sveltia-cms) users to authenticate with [GitHub](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) or [GitLab](https://docs.gitlab.com/ee/api/oauth2.html#authorization-code-flow).
+This simple [Cloudflare Workers](https://workers.cloudflare.com/) script allows [Sveltia CMS](https://github.com/sveltia/sveltia-cms) users to authenticate with [GitHub](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) (or [GitLab](https://docs.gitlab.com/ee/api/oauth2.html#authorization-code-flow)).
 
 ## When to use it
 
@@ -20,7 +20,7 @@ In most cases, you don’t need to use this authenticator. Sveltia CMS supports 
   - You or technical users are the only users of your CMS instance
     - Use the [access token method](https://sveltiacms.app/en/docs/backends/gitlab#access-token) instead.
   - Non-technical users need to sign into the CMS
-    - Use the [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead.
+    - Use [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead.
 
 ### You may need it only if…
 
@@ -32,8 +32,7 @@ In most cases, you don’t need to use this authenticator. Sveltia CMS supports 
 
 > [!NOTE]
 > GitHub plans to support [client-side PKCE authorization](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated since Sveltia CMS will be able to authenticate directly with GitHub without a backend, just like it already does with GitLab.
-
-> [!NOTE]
+>
 > GitLab users don’t need this authenticator at all. GitLab support is included here only for completeness.
 
 <!-- prettier-ignore-end -->
