@@ -8,10 +8,10 @@ In most cases, you don’t need to use this authenticator. Sveltia CMS supports 
 
 ### You don’t need it if…
 
-- You’re already using Netlify CMS or Decap CMS
+- You’re migrating from Netlify CMS or Decap CMS
   - Your site is being deployed to Netlify
     - You can keep using Netlify’s built-in OAuth client for Sveltia CMS.
-  - You have already used [another 3rd party OAuth client](https://decapcms.org/docs/external-oauth-clients/)
+  - You already use [another 3rd party OAuth client](https://decapcms.org/docs/external-oauth-clients/)
     - You can keep using it for Sveltia CMS.
 - You’re using GitHub
   - You or technical users are the only users of your CMS instance
@@ -22,7 +22,7 @@ In most cases, you don’t need to use this authenticator. Sveltia CMS supports 
   - Non-technical users need to sign into the CMS
     - Use the [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead.
 
-### You can use it only if…
+### You may need it only if…
 
 - You’re using GitHub
   - Non-technical users need to sign into the CMS
@@ -31,7 +31,7 @@ In most cases, you don’t need to use this authenticator. Sveltia CMS supports 
 <!-- prettier-ignore-start -->
 
 > [!NOTE]
-> GitHub plans to support [client-side PKCE for SPAs](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated since Sveltia CMS will be able to authenticate directly with GitHub without a backend, just like it already does with GitLab.
+> GitHub plans to support [client-side PKCE authorization](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated since Sveltia CMS will be able to authenticate directly with GitHub without a backend, just like it already does with GitLab.
 
 > [!NOTE]
 > GitLab users don’t need this authenticator at all. GitLab support is included here only for completeness.
