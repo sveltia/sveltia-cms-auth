@@ -2,20 +2,39 @@
 
 This simple [Cloudflare Workers](https://workers.cloudflare.com/) script allows [Sveltia CMS](https://github.com/sveltia/sveltia-cms) users to authenticate with [GitHub](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) or [GitLab](https://docs.gitlab.com/ee/api/oauth2.html#authorization-code-flow).
 
-You don’t have to use it if you previously had Netlify/Decap CMS and your site is still being deployed to Netlify or if you have already used [another 3rd party OAuth client](https://decapcms.org/docs/external-oauth-clients/).
+## When to use it
 
-You can use it if your site is hosted (or has been moved to) somewhere else, such as [Cloudflare Pages](https://pages.cloudflare.com/) or [GitHub Pages](https://pages.github.com/), and you don’t have any other 3rd party client yet.
+In most cases, you don’t need to use this authenticator. Sveltia CMS supports multiple authentication methods for GitHub and GitLab, so you can choose the one that best suits your needs without having to set up this authenticator.
+
+### You don’t need it if…
+
+- You’re already using Netlify CMS or Decap CMS
+  - Your site is being deployed to Netlify
+    - You can keep using Netlify’s built-in OAuth client for Sveltia CMS.
+  - You have already used [another 3rd party OAuth client](https://decapcms.org/docs/external-oauth-clients/)
+    - You can keep using it for Sveltia CMS.
+- You’re using GitHub
+  - You or technical users are the only users of your CMS instance
+    - Use the [access token method](https://sveltiacms.app/en/docs/backends/github#access-token) instead.
+- You’re using GitLab
+  - You or technical users are the only users of your CMS instance
+    - Use the [access token method](https://sveltiacms.app/en/docs/backends/gitlab#access-token) instead.
+  - Non-technical users need to sign into the CMS
+    - Use the [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead.
+
+### You can use it only if…
+
+- You’re using GitHub
+  - Non-technical users need to sign into the CMS
+    - This authenticator will provide a better user experience than the access token method, which requires users to create and manage their own personal access tokens.
 
 <!-- prettier-ignore-start -->
 
-> [!TIP]
-> GitHub users can now sign [using a personal access token](https://sveltiacms.app/en/docs/backends/github#access-token) (PAT) instead of going through the regular OAuth flow. If you’re a developer and the sole user of your CMS instance, the PAT method is much simpler than setting up this authenticator. However, if you have multiple users or non-technical users, you may still want to use the OAuth client for a better user experience.
-
-> [!TIP]
-> GitLab users don’t have to use this authenticator. Use the [PAT method](https://sveltiacms.app/en/docs/backends/gitlab#access-token) or [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead. GitLab support is included here for completeness, but it’s not necessary in most cases.
-
 > [!NOTE]
 > GitHub plans to support [client-side PKCE for SPAs](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated since Sveltia CMS will be able to authenticate directly with GitHub without a backend, just like it already does with GitLab.
+
+> [!NOTE]
+> GitLab users don’t need this authenticator at all. GitLab support is included here only for completeness.
 
 <!-- prettier-ignore-end -->
 
