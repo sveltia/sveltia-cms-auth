@@ -10,9 +10,9 @@ In most cases, you don’t need to use this authenticator. Sveltia CMS supports 
 
 - You’re migrating from Netlify CMS or Decap CMS
   - Your site is being deployed to Netlify
-    - You can keep using Netlify’s built-in OAuth client for Sveltia CMS.
+    - You can keep using Netlify’s built-in OAuth client for Sveltia CMS without any changes to your CMS configuration.
   - You already use [another 3rd party OAuth client](https://decapcms.org/docs/external-oauth-clients/)
-    - You can keep using it for Sveltia CMS.
+    - You can keep using it for Sveltia CMS without any changes to your CMS configuration.
 - You’re using GitHub
   - You or technical users are the only users of your CMS instance
     - Use the [access token method](https://sveltiacms.app/en/docs/backends/github#access-token) instead.
