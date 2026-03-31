@@ -1,0 +1,129 @@
+import { configs as airbnbConfigs } from 'eslint-config-airbnb-extended/legacy';
+import prettier from 'eslint-config-prettier';
+import jsdocPlugin from 'eslint-plugin-jsdoc';
+import globals from 'globals';
+
+export default [
+  // Ignore files (migrated from .eslintrc.yaml ignorePatterns)
+  { ignores: ['**/*.cjs'] },
+
+  // Airbnb base rules (equivalent to eslint-config-airbnb-base), applied to all files
+  ...airbnbConfigs.base.recommended.map(({ files: _f, ...c }) => c),
+
+  // Disable rules that conflict with Prettier
+  prettier,
+
+  // JSDoc recommended rules
+  jsdocPlugin.configs['flat/recommended'],
+
+  // Custom settings
+  {
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.es2022,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      jsdoc: jsdocPlugin,
+    },
+    rules: {
+      'class-methods-use-this': 'off',
+      'import/extensions': 'off',
+      'import/no-extraneous-dependencies': 'off',
+      'import/no-mutable-exports': 'off',
+      'import/no-unresolved': 'off',
+      'import/prefer-default-export': 'off',
+      'jsdoc/no-undefined-types': 'off',
+      'jsdoc/require-jsdoc': [
+        'warn',
+        {
+          require: {
+            ArrowFunctionExpression: true,
+            ClassDeclaration: true,
+            ClassExpression: true,
+            FunctionDeclaration: true,
+            FunctionExpression: true,
+            MethodDefinition: true,
+          },
+        },
+      ],
+      // Other JSDoc rules not in the recommended list
+      'jsdoc/check-indentation': 1,
+      'jsdoc/check-line-alignment': 1,
+      'jsdoc/check-syntax': 1,
+      'jsdoc/match-description': 1,
+      'jsdoc/no-bad-blocks': 1,
+      'jsdoc/no-blank-block-descriptions': 1,
+      'jsdoc/no-defaults': 1,
+      'jsdoc/require-asterisk-prefix': 1,
+      'jsdoc/require-description': 1,
+      'jsdoc/require-description-complete-sentence': 1,
+      'jsdoc/require-hyphen-before-param-description': [
+        'error',
+        'always',
+        { tags: { property: 'always' } },
+      ],
+      'jsdoc/require-throws': 1,
+      'jsdoc/sort-tags': 1,
+      'max-len': [
+        'error',
+        {
+          code: 100,
+          tabWidth: 2,
+          ignoreUrls: true,
+          ignoreStrings: true,
+        },
+      ],
+      'no-param-reassign': 'off',
+      'no-underscore-dangle': 'off',
+      // https://github.com/airbnb/javascript/issues/1660#issuecomment-353018874 + small tweaks
+      'padding-line-between-statements': [
+        'error',
+        {
+          blankLine: 'always',
+          prev: '*',
+          next: [
+            'block',
+            'block-like',
+            'cjs-export',
+            'class',
+            'const',
+            'export',
+            'import',
+            'let',
+            'var',
+          ],
+        },
+        {
+          blankLine: 'always',
+          prev: [
+            'block',
+            'block-like',
+            'cjs-export',
+            'class',
+            'const',
+            'export',
+            'import',
+            'let',
+            'var',
+          ],
+          next: '*',
+        },
+        {
+          blankLine: 'never',
+          prev: ['singleline-const', 'singleline-let', 'singleline-var'],
+          next: ['singleline-const', 'singleline-let', 'singleline-var'],
+        },
+        { blankLine: 'any', prev: ['export', 'import'], next: ['export', 'import'] },
+      ],
+    },
+  },
+];
