@@ -12,6 +12,10 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - esbuild@0.28.1
 
+overrides:
+  esbuild@>=0.17.0 <0.28.1: ^0.28.1
+  esbuild@>=0.27.3 <0.28.1: ^0.28.1
+
 # Work around https://github.com/sveltia/sveltia-cms-auth/issues/17
 packages:
   - .
