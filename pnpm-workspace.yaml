@@ -8,6 +8,10 @@ engineStrict: true
 
 minimumReleaseAge: 1440
 
+# Install security updates
+minimumReleaseAgeExclude:
+  - esbuild@0.28.1
+
 # Work around https://github.com/sveltia/sveltia-cms-auth/issues/17
 packages:
   - .
