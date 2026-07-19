@@ -17,11 +17,11 @@
     "@types/node": "^26.1.1",
     "cspell": "^10.0.1",
     "eslint": "^9.39.5",
-    "eslint-config-airbnb-extended": "^3.1.0",
+    "eslint-config-airbnb-extended": "^3.1.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^63.0.13",
+    "eslint-plugin-jsdoc": "^63.1.0",
     "globals": "^17.7.0",
     "prettier": "^3.9.5",
-    "wrangler": "4.110.0"
+    "wrangler": "4.112.0"
   }
 }
