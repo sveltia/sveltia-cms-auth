@@ -19,9 +19,9 @@
     "eslint": "^9.39.5",
     "eslint-config-airbnb-extended": "^3.1.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^63.1.0",
-    "globals": "^17.7.0",
-    "prettier": "^3.9.5",
-    "wrangler": "4.112.0"
+    "eslint-plugin-jsdoc": "^63.3.0",
+    "globals": "^17.8.0",
+    "prettier": "^3.9.6",
+    "wrangler": "4.114.0"
   }
 }

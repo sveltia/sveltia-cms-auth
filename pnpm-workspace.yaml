@@ -11,3 +11,9 @@ minimumReleaseAge: 1440
 # Work around https://github.com/sveltia/sveltia-cms-auth/issues/17
 packages:
   - .
+
+auditConfig:
+  ignoreGhsas:
+    # dev dependencies only, ignore for now
+    # https://github.com/advisories/GHSA-mh99-v99m-4gvg
+    - GHSA-mh99-v99m-4gvg
