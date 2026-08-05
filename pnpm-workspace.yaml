@@ -12,8 +12,8 @@ minimumReleaseAge: 1440
 packages:
   - .
 
-auditConfig:
-  ignoreGhsas:
-    # dev dependencies only, ignore for now
-    # https://github.com/advisories/GHSA-mh99-v99m-4gvg
-    - GHSA-mh99-v99m-4gvg
+overrides:
+  # https://github.com/advisories/GHSA-rgw5-rvv9-x895
+  brace-expansion@>=4.0.0 <5.0.8: ^5.0.8
+  # https://github.com/advisories/GHSA-4cwx-7wf7-3272 and 5 others
+  undici@>=7.0.0 <7.29.0: ^7.29.0
