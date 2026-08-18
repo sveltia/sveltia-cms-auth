@@ -71,8 +71,8 @@ const outputHTML = ({ provider = 'unknown', token, error, errorCode, env = {} })
             }
 
             // Unlike the site_id parameter, which the caller supplies, the origin of a message
-            // event is set by the browser and cannot be forged by the sender, so it's the only
-            // reliable indication of who opened this popup. An error carries no secret, so it's
+            // event is set by the browser and cannot be forged by the sender, so it’s the only
+            // reliable indication of who opened this popup. An error carries no secret, so it’s
             // always passed through to keep the sign-in screen informative
             if (hasToken && trustedPatterns.length && !isTrusted(origin)) {
               return;
