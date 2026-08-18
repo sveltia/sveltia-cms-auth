@@ -101,6 +101,16 @@ Go back to the `sveltia-cms-auth` service page on the Cloudflare dashboard, sele
   - Multiple hostnames can be defined as a comma-separated list, e.g. `www.example.com, www.example.org`
   - A wildcard (`*`) can be used to match any subdomain, e.g. `*.example.com` that will match `www.example.com`, `blog.example.com`, `docs.api.example.com`, etc. (but not `example.com`)
   - To match a `www`-less naked domain and all the subdomains, use `example.com, *.example.com`
+  - The list serves two purposes: it stops other sites from using your Worker at your expense (anti-abuse), and it stops them from obtaining an access token through it (security), because the authenticator releases a token only to a page served from one of these hostnames
+
+<!-- prettier-ignore-start -->
+> [!IMPORTANT]
+> `ALLOWED_DOMAINS` is optional, but it’s both an anti-abuse and a security measure, so setting it is strongly recommended.
+>
+> The authenticator hands the access token to whichever page opened the sign-in popup, and a popup cannot read that page’s origin on its own. `ALLOWED_DOMAINS` is the only thing that tells your Worker which origins are yours, so while it’s unset, any website can open your Worker’s `/auth` endpoint and receive a token.
+>
+> Such a token belongs to the visiting user, and OAuth providers don’t prompt again once your app has been authorized. So if one of your editors is signed in and visits a malicious page, that page can silently obtain a token that can read and write every repository the editor can reach — no clicks required. Setting `ALLOWED_DOMAINS` to your site’s hostname prevents this, because the token is then released only to the origins you listed.
+<!-- prettier-ignore-end -->
 
 Save and deploy.
 
