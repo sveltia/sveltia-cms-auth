@@ -106,10 +106,6 @@ Go back to the `sveltia-cms-auth` service page on the Cloudflare dashboard, sele
 <!-- prettier-ignore-start -->
 > [!IMPORTANT]
 > `ALLOWED_DOMAINS` is optional, but it’s both an anti-abuse and a security measure, so setting it is strongly recommended.
->
-> The authenticator hands the access token to whichever page opened the sign-in popup, and a popup cannot read that page’s origin on its own. `ALLOWED_DOMAINS` is the only thing that tells your Worker which origins are yours, so while it’s unset, any website can open your Worker’s `/auth` endpoint and receive a token.
->
-> Such a token belongs to the visiting user, and OAuth providers don’t prompt again once your app has been authorized. So if one of your editors is signed in and visits a malicious page, that page can silently obtain a token that can read and write every repository the editor can reach — no clicks required. Setting `ALLOWED_DOMAINS` to your site’s hostname prevents this, because the token is then released only to the origins you listed.
 <!-- prettier-ignore-end -->
 
 Save and deploy.
