@@ -38,8 +38,6 @@ This simple [Cloudflare Workers](https://workers.cloudflare.com/) script allows 
 
 <!-- prettier-ignore-start -->
 > [!NOTE]
-> GitHub plans to support [client-side PKCE authorization](https://github.com/github/roadmap/issues/1153) soon. Once that’s available, this authenticator will be deprecated since Sveltia CMS will be able to authenticate directly with GitHub without a backend, just like it already does with GitLab.
->
 > GitLab users don’t need this authenticator at all. GitLab support is included here only for completeness.
 <!-- prettier-ignore-end -->
 
