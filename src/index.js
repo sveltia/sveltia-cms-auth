@@ -2,6 +2,63 @@
  * List of supported OAuth providers.
  */
 const supportedProviders = ['github', 'gitlab'];
+
+/**
+ * OAuth scopes for each provider: the scope to request when the client doesn’t ask for one, the
+ * separator the provider expects between multiple scopes, and the scopes that may be requested.
+ *
+ * A client can ask for a narrower scope than the default — Sveltia CMS does this with its
+ * `auth_scope` backend option, so a public repository doesn’t require access to a contributor’s
+ * private ones — but only from this list. The endpoint is reachable by anyone, and a token minted
+ * with a wider scope than the CMS needs keeps that scope for every later sign-in, so the request is
+ * not taken on trust. Anything unrecognized falls back to the default, which is what an older
+ * version of this worker granted regardless, so an unfamiliar client still signs in.
+ * @type {Record<string, { default: string, separator: string, allowed: string[] }>}
+ * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps
+ * @see https://docs.gitlab.com/api/oauth2/
+ */
+const providerScopes = {
+  github: {
+    default: 'repo,user',
+    separator: ',',
+    allowed: ['repo', 'public_repo', 'user', 'read:user', 'user:email'],
+  },
+  gitlab: {
+    default: 'api',
+    separator: ' ',
+    allowed: ['api', 'read_api', 'read_user', 'read_repository', 'write_repository'],
+  },
+};
+
+/**
+ * Work out the OAuth scope to request from the given provider.
+ * @param {string} provider - Backend name, e.g. `github`.
+ * @param {string} [requested] - The `scope` parameter from the request, if any. Scopes may be
+ * separated by commas or spaces, as the two providers differ.
+ * @returns {string} Scope to request.
+ */
+const getScope = (provider, requested) => {
+  const { default: fallback, separator, allowed } = providerScopes[provider];
+  const scopes = (requested ?? '').split(/[\s,]+/).filter(Boolean);
+
+  if (!scopes.length) {
+    return fallback;
+  }
+
+  if (scopes.every((scope) => allowed.includes(scope))) {
+    return scopes.join(separator);
+  }
+
+  // The default is wider than what was asked for, so a client that meant to narrow the scope
+  // silently doesn’t. Leave a trace for whoever is running the worker
+  // eslint-disable-next-line no-console
+  console.warn(
+    `Ignoring the unsupported "${requested}" scope for ${provider}; requesting "${fallback}".`,
+  );
+
+  return fallback;
+};
+
 /**
  * Escape the given string for safe use in a regular expression.
  * @param {string} str - Original string.
@@ -106,7 +163,7 @@ const outputHTML = ({ provider = 'unknown', token, error, errorCode, env = {} })
 const handleAuth = async (request, env) => {
   const { url } = request;
   const { origin, searchParams } = new URL(url);
-  const { provider, site_id: domain } = Object.fromEntries(searchParams);
+  const { provider, site_id: domain, scope: requestedScope } = Object.fromEntries(searchParams);
 
   if (!provider || !supportedProviders.includes(provider)) {
     return outputHTML({
@@ -115,6 +172,8 @@ const handleAuth = async (request, env) => {
       errorCode: 'UNSUPPORTED_BACKEND',
     });
   }
+
+  const scope = getScope(provider, requestedScope);
 
   const {
     ALLOWED_DOMAINS,
@@ -158,7 +217,7 @@ const handleAuth = async (request, env) => {
 
     const params = new URLSearchParams({
       client_id: GITHUB_CLIENT_ID,
-      scope: 'repo,user',
+      scope,
       state: csrfToken,
     });
 
@@ -180,7 +239,7 @@ const handleAuth = async (request, env) => {
       client_id: GITLAB_CLIENT_ID,
       redirect_uri: `${origin}/callback`,
       response_type: 'code',
-      scope: 'api',
+      scope,
       state: csrfToken,
     });
 
