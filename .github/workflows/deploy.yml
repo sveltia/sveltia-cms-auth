@@ -10,10 +10,12 @@ jobs:
     steps:
       - name: Checkout the branch
         uses: actions/checkout@v7.0.1
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6.0.9
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@v2.1.0
         with:
           version: latest
+          runtime: node@26
+          cache: true
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v4.0.0
         with:
