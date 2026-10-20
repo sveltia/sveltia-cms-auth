@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  sharp@<0.35.4: ^0.35.4
-
 importers:
 
   .:
