@@ -86,6 +86,7 @@ Go back to the `sveltia-cms-auth` service page on the Cloudflare dashboard, sele
 - `GITHUB_CLIENT_ID`: **Client ID** from Step 2
 - `GITHUB_CLIENT_SECRET`: **Client Secret** from Step 2; click the **Encrypt** button to hide it
 - `GITHUB_HOSTNAME`: Required only if you’re using GitHub Enterprise Server. Default: `github.com`
+- `GITHUB_ALLOW_WORKFLOW_SCOPE`: (Optional) Set to `true` to let a site request the `workflow` scope with Sveltia CMS’s `auth_scope` option, so the CMS can keep an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open#authentication-scope) contributor’s fork in sync when the site’s GitHub Actions workflow files change. The scope lets a token change workflows in every repository the user can push to, so it’s left out of the request unless this is set
 
 #### GitLab
 

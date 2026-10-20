@@ -13,6 +13,9 @@ const supportedProviders = ['github', 'gitlab'];
  * with a wider scope than the CMS needs keeps that scope for every later sign-in, so the request is
  * not taken on trust. Anything unrecognized falls back to the default, which is what an older
  * version of this worker granted regardless, so an unfamiliar client still signs in.
+ *
+ * GitHub’s `workflow` scope is wider than the default, so it’s only allowed when the
+ * `GITHUB_ALLOW_WORKFLOW_SCOPE` environment variable is `true`: see {@link getScope}.
  * @type {Record<string, { default: string, separator: string, allowed: string[] }>}
  * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps
  * @see https://docs.gitlab.com/api/oauth2/
@@ -35,17 +38,33 @@ const providerScopes = {
  * @param {string} provider - Backend name, e.g. `github`.
  * @param {string} [requested] - The `scope` parameter from the request, if any. Scopes may be
  * separated by commas or spaces, as the two providers differ.
+ * @param {{ [key: string]: string }} env - Environment variables.
  * @returns {string} Scope to request.
  */
-const getScope = (provider, requested) => {
+const getScope = (provider, requested, env) => {
   const { default: fallback, separator, allowed } = providerScopes[provider];
-  const scopes = (requested ?? '').split(/[\s,]+/).filter(Boolean);
+  let scopes = (requested ?? '').split(/[\s,]+/).filter(Boolean);
+  const allowWorkflow = provider === 'github' && env.GITHUB_ALLOW_WORKFLOW_SCOPE === 'true';
+
+  // The `workflow` scope lets a token change GitHub Actions workflows in every repository the user
+  // can push to, so it takes the operator’s consent as well as the site’s. Without it, the scope is
+  // left out rather than the request falling back to the default, which could be wider than what
+  // was asked for, e.g. `repo` instead of `public_repo`
+  if (!allowWorkflow && scopes.includes('workflow')) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Ignoring the "workflow" scope for ${provider}; set GITHUB_ALLOW_WORKFLOW_SCOPE to "true" ` +
+        'to allow it.',
+    );
+
+    scopes = scopes.filter((scope) => scope !== 'workflow');
+  }
 
   if (!scopes.length) {
     return fallback;
   }
 
-  if (scopes.every((scope) => allowed.includes(scope))) {
+  if (scopes.every((scope) => allowed.includes(scope) || (allowWorkflow && scope === 'workflow'))) {
     return scopes.join(separator);
   }
 
@@ -173,7 +192,7 @@ const handleAuth = async (request, env) => {
     });
   }
 
-  const scope = getScope(provider, requestedScope);
+  const scope = getScope(provider, requestedScope, env);
 
   const {
     ALLOWED_DOMAINS,
