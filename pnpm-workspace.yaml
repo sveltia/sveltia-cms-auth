@@ -1,8 +1,16 @@
+# cSpell:ignore gcqx minimatch
+
 allowBuilds:
   esbuild: false
   sharp: false
   unrs-resolver: false
   workerd: false
+
+auditConfig:
+  ignoreGhsas:
+    # minimatch: Only used by some dev dependencies; no patch available for older versions
+    # https://github.com/advisories/GHSA-g3hv-75wg-m249
+    - GHSA-g3hv-75wg-m249
 
 engineStrict: true
 
