@@ -16,10 +16,6 @@ engineStrict: true
 
 minimumReleaseAge: 1440
 
-overrides:
-  # Security update
-  undici@>=7.0.0 <7.30.1: ^7.30.1
-
 # Work around https://github.com/sveltia/sveltia-cms-auth/issues/17
 packages:
   - .
