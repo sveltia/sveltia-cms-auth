@@ -15,13 +15,13 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
-    "cspell": "^10.4.1",
+    "cspell": "^10.5.1",
     "eslint": "^9.39.5",
     "eslint-config-airbnb-extended": "^3.3.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^65.4.5",
+    "eslint-plugin-jsdoc": "^65.4.10",
     "globals": "^17.14.0",
-    "prettier": "^3.9.10",
-    "wrangler": "4.160.0"
+    "prettier": "^3.10.1",
+    "wrangler": "4.164.0"
   }
 }
