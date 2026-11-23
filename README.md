@@ -7,6 +7,9 @@ Unlike an OAuth app, a GitHub App only gets access to the repositories it’s in
 <!-- prettier-ignore-start -->
 > [!IMPORTANT]
 > **In most cases, you don’t need this authenticator**. Sveltia CMS supports multiple authentication methods for GitHub and GitLab, so you can choose the one that best suits your needs without having to set up this OAuth client.
+
+> [!TIP]
+> **We now recommend [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) instead.** Like this authenticator, it runs on Cloudflare Workers for free and signs users in with a GitHub App, but its setup wizard registers the app for you, so there are no credentials to copy by hand. On top of that, it adds user roles, sign-in without a GitHub account, real-time entry locks, comments and shared API keys. It requires Sveltia CMS v0.271.0 or later and doesn’t support GitHub Enterprise Server yet. This authenticator remains available for those who only need GitHub sign-in.
 <!-- prettier-ignore-end -->
 
 ## When to use it
@@ -28,7 +31,8 @@ Unlike an OAuth app, a GitHub App only gets access to the repositories it’s in
 
 - You’re using GitHub
   - Non-technical users need to sign into the CMS
-    - This authenticator will provide a better user experience than the access token method, which requires users to create and manage their own personal access tokens.
+    - Consider [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) first. It provides the same GitHub sign-in with an easier setup, along with sign-in without a GitHub account and other features for teams.
+    - This authenticator still suits a site that only needs GitHub sign-in, or one on GitHub Enterprise Server. It provides a better user experience than the access token method, which requires users to create and manage their own personal access tokens.
 
 ## How to use it
 
@@ -122,6 +126,10 @@ Open `admin/config.yml` locally or remotely, and add your Worker URL from Step 1
 Commit the change. Once deployed, you can sign into Sveltia CMS remotely with GitHub!
 
 ## FAQ
+
+### How do I move to Sveltia CMS Additions?
+
+Follow the [setup guide](https://sveltiacms.app/en/docs/additions/setup). When it comes to the CMS configuration, add `auth_type: additions` under `backend`, and replace `base_url` with the URL of the new Worker. The setup wizard then registers a new GitHub App; the one you registered for this authenticator isn’t reused. GitHub sign-in doesn’t create accounts by itself, so [add your users](https://sveltiacms.app/en/docs/additions/users) with their GitHub usernames on the Administration page, or let the members of a GitHub organization in with a sign-up rule. Users then sign in again, through the service. Once everything works, you can delete this authenticator’s Worker and its GitHub App, which also revokes the tokens the app issued.
 
 ### I’ve been using this authenticator with an OAuth app. How do I migrate to a GitHub App?
 
